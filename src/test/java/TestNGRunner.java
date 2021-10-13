@@ -13,7 +13,8 @@ public class TestNGRunner {
 
     public static void main(String[] args) throws Exception {
 
-        List<TestModel> testsForExecution = ParametersParser.getListOfTests(args);
+        TestSource source = SourceFactory.getSource(args);
+        List<TestModel> testsForExecution = source.getSteps();
 
         XmlSuite suite = new XmlSuite();
         suite.setName("TmpSuite");
@@ -21,7 +22,8 @@ public class TestNGRunner {
             try {
                 addXmlTestToSuite(suite, testModel);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(cannot parse)
+                throw new RuntimeException(e);
             }
         });
         List<XmlSuite> suites = new ArrayList<XmlSuite>();
@@ -31,7 +33,7 @@ public class TestNGRunner {
         tng.run();
     }
 
-    private static XmlTest addXmlTestToSuite(XmlSuite suite, TestModel testToAdd) throws Exception {
+    private static XmlTest addXmlTestToSuite(XmlSuite suite, TestModel testToAdd)  {
         XmlTest test = new XmlTest(suite);
         test.setName(testToAdd.testClassName);
         List<XmlClass> classes = new ArrayList<XmlClass>();
