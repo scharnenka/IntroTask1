@@ -9,7 +9,7 @@ public class Test3 {
         System.out.println("Test3->action3_a->data3a_1");
     }
 
-    @Parameters({ "data3b_1", "data3b_2"})
+    @Parameters({"data3b_1", "data3b_2"})
     @Test
     public void action3_b(String data3b_1, String data3b_2) {
         System.out.println("Test3->action3_a->data3b_1;data3b_2");
