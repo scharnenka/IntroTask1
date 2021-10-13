@@ -11,18 +11,15 @@ import java.util.Map;
 
 public class TestNGRunner {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
-        List<TestModel> testsForExecution = ParametersParser.getListOfTests(args);
+        TestSourceSteps source = SourceFactory.getSource(args);
+        List<TestModel> testsForExecution = source.getTestsForExecution(String.join("", args));
 
         XmlSuite suite = new XmlSuite();
         suite.setName("TmpSuite");
         testsForExecution.forEach(testModel -> {
-            try {
-                addXmlTestToSuite(suite, testModel);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            addXmlTestToSuite(suite, testModel);
         });
         List<XmlSuite> suites = new ArrayList<XmlSuite>();
         suites.add(suite);
@@ -31,19 +28,18 @@ public class TestNGRunner {
         tng.run();
     }
 
-    private static XmlTest addXmlTestToSuite(XmlSuite suite, TestModel testToAdd) throws Exception {
+    private static void addXmlTestToSuite(XmlSuite suite, TestModel testToAdd) {
         XmlTest test = new XmlTest(suite);
-        test.setName(testToAdd.testClassName);
+        test.setName(testToAdd.getTestClassName());
         List<XmlClass> classes = new ArrayList<XmlClass>();
-        XmlClass testClass = new XmlClass(testToAdd.testClassName);
+        XmlClass testClass = new XmlClass(testToAdd.getTestClassName());
         List<XmlInclude> includeMethods = new ArrayList<>();
-        includeMethods.add(new XmlInclude(testToAdd.testMethodName));
+        includeMethods.add(new XmlInclude(testToAdd.getTestMethodName()));
         testClass.setIncludedMethods(includeMethods);
         Map<String, String> testClassParameters = new HashMap<>();
-        testToAdd.methodParams.forEach(methodParam -> testClassParameters.put(methodParam, methodParam));
+        testToAdd.getMethodParams().forEach(methodParam -> testClassParameters.put(methodParam, methodParam));
         testClass.setParameters(testClassParameters);
         classes.add(testClass);
         test.setXmlClasses(classes);
-        return test;
     }
 }
