@@ -10,13 +10,8 @@ public class DriverModule extends AbstractModule {
     @Override
     protected void configure() {
 
-        bind(DriverManager.class)
-                .to(ChromeDriverManager.class)
+        bind(WebDriver.class)
+                .to(DriverProvider.class)
                 .in(Scopes.SINGLETON);
-    }
-
-    @Provides
-    public WebDriver getDriver(DriverManager driverManager) {
-        return driverManager.getDriver();
     }
 }
